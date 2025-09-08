@@ -1,0 +1,7 @@
+FROM node:20 AS build
+WORKDIR /app
+COPY . .
+RUN npm ci && npm run build
+ENV PORT={{ containerPort }}
+EXPOSE {{ containerPort }}
+CMD ["npm","run","start"]

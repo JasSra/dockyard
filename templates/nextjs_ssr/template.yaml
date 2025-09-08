@@ -1,0 +1,27 @@
+kind: Template/v1
+name: nextjs_ssr
+type: web
+detect:
+  - filesAny: ["package.json"]
+    jsonPathAll:
+      - path: "$.dependencies.next"
+  - filesAny: ["next.config.js", "next.config.mjs"]
+defaults:
+  containerPort: 3000
+  healthPath: "/healthz"
+  env:
+    - name: NODE_ENV
+      value: production
+build:
+  mode: dockerfile
+  dockerfile: Dockerfile.tmpl
+  args:
+    - name: PORT
+      from: containerPort
+run:
+  command: []
+  exposePortFrom: containerPort
+nginx:
+  enabled: true
+  websocket: true
+  cacheStatic: false

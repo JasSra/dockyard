@@ -1,0 +1,12 @@
+kind: Template/v1
+name: static_html
+type: web
+detect: []
+defaults:
+  containerPort: 80
+  healthPath: "/"
+nginx:
+  enabled: true
+  confTemplate: nginx_static.conf.tmpl
+  websocket: false
+  cacheStatic: true

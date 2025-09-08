@@ -1,0 +1,29 @@
+openapi: 3.0.3
+info:
+  title: Dockyard API
+  version: 0.1.0
+servers:
+  - url: http://{CONTROLLER_URL}
+paths:
+  /api/projects:
+    post:
+      summary: Create project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+      responses: { '200': { description: ok } }
+
+  /api/projects/{id}/deploy:
+    post:
+      summary: Deploy project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses: { '200': { description: ok } }

@@ -1,0 +1,18 @@
+kind: Template/v1
+name: dotnet_aspnet_8
+type: web
+detect:
+  - filesAny: ["*.csproj"]
+defaults:
+  containerPort: 8080
+  healthPath: "/healthz"
+build:
+  mode: dockerfile
+  dockerfile: Dockerfile.tmpl
+run:
+  command: []
+  exposePortFrom: containerPort
+nginx:
+  enabled: true
+  websocket: true
+  cacheStatic: false

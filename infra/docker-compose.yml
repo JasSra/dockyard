@@ -1,0 +1,35 @@
+version: "3.9"
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+  - "${NGINX_PORT:-80}:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # { SPECULATION }
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+  agent:
+    build: ../agent
+    environment:
+      - AGENT_SHARED_SECRET=${AGENT_SHARED_SECRET:-devsecret}
+  - NGINX_UPSTREAM_HOST=host.docker.internal
+    volumes:
+      - ../agent/data:/data
+      - ../templates:/templates:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    ports:
+  - "${AGENT_PORT:-8080}:8080"
+    depends_on:
+      - nginx
+  controller:
+    build: ../controller
+    environment:
+      - ADMIN_SECRET=${ADMIN_SECRET:-admin}
+  - AGENT_URL=http://agent:8080
+  - AGENT_SHARED_SECRET=${AGENT_SHARED_SECRET:-devsecret}
+    ports:
+  - "${CONTROLLER_PORT:-3000}:3000"
+    depends_on:
+      - agent

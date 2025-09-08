@@ -1,0 +1,19 @@
+kind: Template/v1
+name: nextjs_static
+type: web
+detect:
+  - filesAny: ["package.json"]
+defaults:
+  containerPort: 80
+  healthPath: "/"
+build:
+  mode: dockerfile
+  dockerfile: Dockerfile.tmpl
+run:
+  command: []
+  exposePortFrom: containerPort
+nginx:
+  enabled: true
+  confTemplate: nginx_static.conf.tmpl
+  websocket: false
+  cacheStatic: true
